@@ -85,7 +85,7 @@ public class JWTRefreshEndpoint extends AssignmentEndpoint {
         Jwts.builder()
             .setIssuedAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toDays(10)))
             .setClaims(claims)
-            .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512, JWT_PASSWORD)
+            .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, JWT_PASSWORD)
             .compact();
     Map<String, Object> tokenJson = new HashMap<>();
     String refreshToken = RandomStringUtils.randomAlphabetic(20);
@@ -103,7 +103,7 @@ public class JWTRefreshEndpoint extends AssignmentEndpoint {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
     try {
-      Jwt jwt = Jwts.parser().setSigningKey(JWT_PASSWORD).parse(token.replace("Bearer ", ""));
+      Jwt jwt = (Jwt) Jwts.parser().setSigningKey(JWT_PASSWORD).parseClaimsJwt(token).getBody();
       Claims claims = (Claims) jwt.getBody();
       String user = (String) claims.get("user");
       if ("Tom".equals(user)) {
