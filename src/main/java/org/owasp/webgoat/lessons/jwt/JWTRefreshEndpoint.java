@@ -79,7 +79,6 @@ public class JWTRefreshEndpoint extends AssignmentEndpoint {
     }
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
-
   private Map<String, Object> createNewTokens(String user) {
     Map<String, Object> claims = Map.of("admin", "false", "user", user);
     String token =
